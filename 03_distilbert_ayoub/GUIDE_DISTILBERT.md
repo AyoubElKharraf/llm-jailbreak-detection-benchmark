@@ -1,29 +1,80 @@
-# Guide du fine-tuning DistilBERT
+# Phase 3 — Fine-tuning de DistilBERT
 
-**Responsable : Ayoub** — Configuration Hugging Face : `full` ; modèle initial : `distilbert-base-uncased`.
+**Responsable : Ayoub**
 
-## Objectif et prérequis
+**Modèle de départ :** `distilbert-base-uncased`
 
-Fine-tuner un transformer pour la classification binaire, puis évaluer et exporter ses prédictions. Avant d'entraîner, récupérer le compte rendu EDA et confirmer avec Taoufik les labels, l'identifiant des exemples et les règles de séparation anti-fuite. Vérifier la mémoire disponible : l'entraînement peut être lent sur CPU et les lots doivent être adaptés au GPU/CPU.
+**Données nécessaires :** le même corpus et les mêmes partitions validés en phase 1 et utilisés pour la baseline.
 
-## Étapes
+## Objectif
 
-1. Charger la configuration `full`. Confirmer les colonnes et splits réels ; ne pas supposer qu'ils sont identiques à `core`.
-2. Appliquer le split convenu dans l'EDA. Si `group_id` représente des exemples apparentés, vérifier qu'un groupe ne traverse pas train, validation et test. Garder le test à l'écart du réglage.
-3. Définir le mapping explicite des deux labels vers `0` et `1` et indiquer que `1` correspond à la classe malveillante (ou documenter le mapping retenu). Vérifier qu'il correspond à celui utilisé par la baseline.
-4. Charger tokenizer et modèle `distilbert-base-uncased` avec une tête à deux classes. Tokeniser les prompts avec troncature et padding adapté. Choisir la longueur maximale à partir des longueurs observées en EDA et noter quelle part des textes est tronquée.
-5. Préparer les données pour Hugging Face `Trainer`. Choisir les paramètres avant l'entraînement : nombre d'époques, batch size, taux d'apprentissage, graine, stratégie d'évaluation/sauvegarde et métrique de sélection. Enregistrer versions, matériel et paramètres.
-6. Entraîner sur train et sélectionner le meilleur état à l'aide de validation. Surveiller surapprentissage, déséquilibre de classes et ressources. Ne pas ajuster le modèle en fonction des scores de test.
-7. Une fois les choix figés, prédire le test et calculer les mêmes mesures que pour la baseline : précision, rappel, F1 de la classe malveillante, supports et matrice de confusion.
-8. Sauvegarder modèle et tokenizer. Exporter les prédictions avec une clé `example_id` compatible avec la baseline, `y_true`, `y_pred` et le score/probabilité malveillante.
+Fine-tuner un modèle transformer pour classifier les prompts selon la définition de tâche commune, puis exporter ses prédictions de test afin que Taoufik puisse les comparer à la baseline.
 
-## Livrables et passage de relais
+## Ce qu'il faut avoir avant de commencer
 
-Fournir les prédictions test, les métriques, les paramètres exacts, la graine, les versions et l'emplacement du modèle sauvegardé. Confirmer si les exemples test sont réellement les mêmes que ceux de la baseline. Si les jeux diffèrent, ne pas présenter la comparaison comme appariée.
+- Corpus, manifeste et compte rendu EDA finalisés ;
+- labels et mapping établis, avec `1` associé à la classe malveillante si c'est le mapping commun retenu ;
+- train, validation et test établis avec la stratégie anti-fuite convenue ;
+- identifiant stable des exemples ;
+- accès au modèle pré-entraîné sur Hugging Face ;
+- environnement Python avec les dépendances installées et mémoire suffisante. Le fine-tuning est plus rapide avec un GPU, mais il faut adapter les lots au matériel.
 
-## Points à documenter dans le rapport
+## Suivi pas à pas
 
-- La troncature et la longueur maximale choisie ;
-- le coût matériel/temps utile et les contraintes rencontrées ;
-- les critères de sélection sur validation et les réglages effectués ;
-- les faux négatifs/faux positifs intéressants et les limites de généralisation.
+### 1. Reprendre exactement le protocole commun
+
+Charger le corpus convenu, vérifier les effectifs et les noms de colonnes, puis confirmer que les identifiants de train/validation/test sont ceux transmis à Taoufik. Ne pas refaire un split aléatoire indépendant : cela empêcherait une comparaison directe et pourrait créer des fuites par groupe.
+
+### 2. Vérifier labels et groupes
+
+Appliquer le mapping documenté en phase 1. Contrôler qu'aucune classe inconnue n'est convertie silencieusement. Vérifier qu'aucun groupe apparenté ne traverse les partitions et que le test reste réservé à l'évaluation finale.
+
+### 3. Choisir le traitement des textes
+
+Charger le tokenizer et le modèle `distilbert-base-uncased` avec une tête de classification à deux classes. Choisir une longueur maximale à partir des longueurs observées en EDA. Mesurer et rapporter la proportion des textes tronqués. Utiliser un padding adapté et préserver le contenu du prompt autant que possible.
+
+### 4. Fixer les paramètres d'entraînement
+
+Avant l'entraînement, consigner nombre d'époques, taille des lots, taux d'apprentissage, graine, stratégie d'évaluation/sauvegarde et métrique de sélection. Enregistrer la version de Transformers/PyTorch, le matériel et les éventuelles contraintes mémoire.
+
+### 5. Entraîner et sélectionner
+
+Entraîner sur train. Utiliser validation pour surveiller le modèle et choisir le meilleur état selon la métrique définie. Noter les courbes ou résultats utiles et les signes de surapprentissage. Le test ne sert pas au réglage.
+
+### 6. Évaluer et exporter
+
+Après avoir figé le modèle, évaluer test avec les mêmes définitions que la baseline : précision, rappel et F1 de la classe malveillante, supports et matrice de confusion. Exporter `example_id`, `y_true`, `y_pred` et si possible `score_malicious` pour chaque exemple test.
+
+### 7. Sauvegarder et passer le relais
+
+Sauvegarder modèle et tokenizer, paramètres, versions, graine et résultats. Transmettre à Taoufik l'export ainsi que la confirmation que les identifiants test correspondent à ceux de la baseline.
+
+## Livrables
+
+1. Fiche d'expérience reproductible avec paramètres et environnement ;
+2. poids du modèle et tokenizer sauvegardés localement ;
+3. résultats test et analyse des erreurs ;
+4. export de prédictions alignable par identifiant avec la baseline ;
+5. note sur troncature, temps/matériel et difficultés rencontrées.
+
+## Fichiers à produire dans ce dossier
+
+| Fichier | Contenu attendu | À versionner ? |
+|---|---|---|
+| `distilbert_experiment.md` | Corpus/split, mapping, longueur maximale et taux de troncature, paramètres, sélection sur validation, graine, versions et matériel. | Oui |
+| `distilbert_metrics.json` ou `distilbert_metrics.csv` | Métriques finales et supports, classe positive, ordre des labels et identifiant du test. | Oui, chiffres uniquement |
+| `distilbert_test_predictions.csv` | `example_id`, `y_true`, `y_pred`, `score_malicious` si disponible, une ligne par exemple test. | Selon les conditions des données ; ne pas inclure le texte brut sans autorisation |
+| `distilbert_confusion_matrix.png` | Matrice de confusion annotée et lisible. | Oui |
+| `artifacts/` (local) | Modèle, tokenizer, journaux et checkpoints utiles. | Non si volumineux ; garder localement et ignorer par Git |
+
+Utiliser la même clé `example_id` que la baseline. Ne pas committer les checkpoints ou poids volumineux sans décision du binôme.
+
+## Checklist avant de remettre le travail
+
+- [ ] Le corpus, mapping des labels et split sont les mêmes que ceux de la baseline.
+- [ ] Aucun groupe lié ne traverse les partitions.
+- [ ] Les paramètres ont été choisis sans consulter le test.
+- [ ] La longueur maximale et l'effet de troncature sont documentés.
+- [ ] Les métriques et supports suivent la convention commune.
+- [ ] L'export comporte une clé stable, `y_true`, `y_pred` et idéalement le score.
+- [ ] Modèle, tokenizer, versions et graine sont sauvegardés ou consignés.

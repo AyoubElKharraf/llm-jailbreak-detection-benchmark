@@ -1,37 +1,82 @@
-# Guide du tableau de bord comparatif
+# Phase 4 — Évaluation comparative et tableau de bord
 
-**Responsable : Taoufik** — Cette phase commence lorsque les deux responsables ont remis des prédictions de test et leur protocole.
+**Responsable : Taoufik**
 
-## Objectif et éléments nécessaires
+**Entrées :** export baseline et export DistilBERT produits en phases 2 et 3.
 
-Présenter les résultats de la baseline et de DistilBERT de manière lisible, vérifiable et honnête sur la comparabilité. Récupérer les deux exports avec au minimum identifiant stable, label réel et prédiction, ainsi que les définitions des labels et splits utilisés. Les scores seuls ou deux captures d'écran ne suffisent pas.
+## Objectif
 
-## Étapes
+Comparer les deux détecteurs sur un test commun, expliquer les résultats et rendre les métriques consultables dans un tableau de bord. Cette phase mesure des classifieurs ; elle ne mesure pas à elle seule une protection appliquée à un LLM.
 
-1. Vérifier le format, le nombre de lignes, les valeurs manquantes, les labels et les identifiants des deux exports. Repérer les doublons d'identifiants.
-2. Joindre les fichiers par identifiant d'exemple, jamais simplement par numéro de ligne. Mesurer le nombre d'exemples présents dans les deux fichiers et ceux absents de l'un ou l'autre.
-3. Vérifier que `y_true` est identique pour chaque exemple aligné. Si les labels divergent, arrêter la comparaison et résoudre le problème de mapping ou de version du dataset.
-4. Déterminer le périmètre d'évaluation : comparaison appariée sur les seuls exemples communs si ce périmètre est valide, ou résultats séparés si les tests ne sont pas comparables. Indiquer les exclusions et supports.
-5. Pour chaque modèle, calculer précision, rappel, F1-score et support, avec la classe positive malveillante explicitement définie. Ajouter la matrice de confusion avec ordre des axes lisible. Utiliser les mêmes conventions de métriques.
-6. Présenter les résultats dans un tableau comparatif et des graphiques simples. Ajouter des filtres ou vues utiles (modèle, classe, catégorie si disponible) sans masquer les tailles d'échantillons.
-7. Examiner des erreurs représentatives : faux négatifs (attaques manquées) et faux positifs (prompts bénins signalés). Masquer ou anonymiser le contenu si nécessaire.
-8. Construire le tableau de bord avec l'outil choisi (Streamlit ou autre dépendance déjà prévue) et indiquer comment le lancer ainsi que les chemins attendus pour les exports.
+## Ce qu'il faut avoir avant de commencer
 
-## Attention à « avant/après protection »
+- Deux exports avec `example_id`, `y_true`, `y_pred` et, si possible, `score_malicious` ;
+- fiches d'expérience et définitions communes des labels/métriques ;
+- confirmation du split, du corpus et de la version utilisés par chacun ;
+- choix de l'outil de visualisation (Streamlit est prévu dans `requirements.txt`) ;
+- environnement avec les dépendances du projet.
 
-Le projet compare deux classifieurs. Il ne mesure pas automatiquement une protection appliquée à un LLM. N'utiliser une comparaison « avant/après protection » que si une défense, un protocole et des données avant/après ont réellement été définis et évalués. Sinon, nommer clairement les vues « baseline vs DistilBERT ».
+## Suivi pas à pas
+
+### 1. Contrôler les fichiers reçus
+
+Vérifier les colonnes, types, lignes vides, valeurs de labels, prédictions manquantes et identifiants dupliqués. Confirmer que chaque fichier correspond au test annoncé et que la classe positive est identique.
+
+### 2. Aligner les prédictions
+
+Joindre les exports par `example_id`, jamais par ordre de ligne. Rapporter combien d'exemples sont communs, manquants ou dupliqués. Pour chaque identifiant commun, comparer `y_true`. Si les labels réels divergent, suspendre la comparaison jusqu'à correction du mapping ou du corpus.
+
+### 3. Définir le périmètre de comparaison
+
+Si les deux modèles ont exactement les mêmes exemples test, comparer sur cet ensemble. S'ils diffèrent, utiliser un sous-ensemble commun seulement si sa construction reste valide et documenter l'exclusion ; sinon présenter deux évaluations séparées. Afficher le support associé à chaque métrique.
+
+### 4. Calculer les métriques
+
+Pour chacun des modèles, calculer précision, rappel et F1 pour la classe malveillante, supports par classe et matrice de confusion. Indiquer la classe positive, l'ordre des axes et les conventions de calcul. Ne pas comparer une moyenne macro pour un modèle avec une moyenne binaire pour l'autre.
+
+### 5. Analyser les résultats
+
+Comparer les métriques et examiner des exemples de faux négatifs et faux positifs. Si les catégories ou sources sont conservées, examiner aussi les résultats par groupe/source sans tirer de conclusions sur des sous-groupes trop petits. Protéger ou masquer les prompts dans une présentation publique.
+
+### 6. Construire le tableau de bord
+
+Prévoir au minimum : résumé du protocole et du nombre d'exemples, tableau des scores, matrices de confusion, comparaison visuelle et accès aux erreurs représentatives. Indiquer où déposer les exports et comment lancer le tableau de bord. Les détails d'implémentation seront écrits dans le code au moment de cette phase ; ce dépôt reste un guide, pas un script.
+
+### 7. Transmettre les résultats
+
+Fournir à Ayoub les métriques consolidées, figures exportées, définition du périmètre, supports, exclusions et quelques constats d'erreurs pour le rapport.
+
+## Attention à la formulation « avant/après protection »
+
+Ne pas appeler la comparaison « avant/après protection » sauf si une défense réelle a été appliquée et évaluée avec un protocole dédié. Pour le projet actuel, nommer les vues **Baseline vs DistilBERT**.
 
 ## Livrables
 
-- Un tableau consolidé des métriques et des supports ;
-- les matrices de confusion des deux modèles ;
-- une visualisation comparative et un tableau de bord exécutable ;
-- une note qui décrit l'alignement, le split, les exclusions et toute limite de comparabilité ;
-- une synthèse transmissible à Ayoub pour le rapport.
+1. Tableau de métriques avec supports et protocole ;
+2. matrices de confusion et graphiques comparatifs ;
+3. tableau de bord exécutable et consignes de lancement ;
+4. note de comparabilité, erreurs observées et limites ;
+5. synthèse remise à Ayoub pour le rapport final.
 
-## Contrôle qualité
+## Fichiers à produire dans ce dossier
 
-- Les prédictions sont jointes par identifiant et les labels réels concordent.
-- Le nombre d'exemples évalués est visible et cohérent avec les exports.
-- Les métriques utilisent la même définition de classe positive.
-- Les graphiques ne suggèrent pas une comparaison équitable si les populations test diffèrent.
+| Fichier | Contenu attendu | À versionner ? |
+|---|---|---|
+| `comparison_protocol.md` | Sources des exports, split, règle d'alignement, exclusions, définition des métriques et limites de comparaison. | Oui |
+| `comparison_results.csv` | Résultats consolidés : métriques, supports, modèles et périmètre test. | Oui |
+| `comparison_summary.png` | Graphique comparatif avec noms des modèles et supports visibles. | Oui |
+| `confusion_matrix_baseline.png` et `confusion_matrix_distilbert.png` | Matrices annotées avec axes et ordre des classes. | Oui |
+| `dashboard/` | Application de visualisation et consignes d'utilisation. Le code sera créé durant cette phase. | Oui, hors données privées et secrets |
+| `inputs/` (local) | Exports de prédictions utilisés par le tableau de bord. | Garder localement si les conditions des données l'exigent |
+
+Le tableau de bord doit pouvoir être relancé avec les exports attendus. Ne pas intégrer de clés d'accès, prompts soumis à restriction ou copies du corpus dans son dossier.
+
+## Checklist avant de remettre le travail
+
+- [ ] Les exports ont été contrôlés et joints par identifiant stable.
+- [ ] Les labels réels concordent sur les exemples comparés.
+- [ ] Même classe positive, même convention métrique, supports affichés.
+- [ ] Les différences de corpus/split et exclusions sont visibles.
+- [ ] Les matrices de confusion ont des axes et classes clairement nommés.
+- [ ] L'analyse présente des erreurs, pas seulement les scores agrégés.
+- [ ] Le tableau de bord et ses instructions ont été transmis à Ayoub.

@@ -1,31 +1,76 @@
-# Guide de la baseline TF-IDF + régression logistique
+# Phase 2 — Baseline TF-IDF + régression logistique
 
-**Responsable : Taoufik** — Configuration Hugging Face : `core`.
+**Responsable : Taoufik**
 
-## Objectif et prérequis
+**Données nécessaires :** corpus multi-sources validé dans `01_exploration_eda/`.
 
-Construire un premier détecteur de prompts malveillants avec une méthode classique et reproductible. Avant de commencer, lire le compte rendu EDA et confirmer le nom de la colonne texte, le mapping des labels, le split et l'identifiant stable des exemples.
+## Objectif
 
-## Étapes
+Créer une première référence de classification avec une méthode classique. Elle servira à mesurer ce qu'un modèle relativement simple peut détecter et à comparer ensuite DistilBERT dans les mêmes conditions.
 
-1. Charger la configuration `core` et appliquer exactement le protocole documenté dans l'EDA. Vérifier une dernière fois tailles et labels des partitions.
-2. Préparer les textes et labels. Faire seulement les transformations nécessaires et identiques entre train, validation et test. Ne pas supprimer une partie du prompt qui pourrait porter le signal d'attaque.
-3. Créer un pipeline qui transforme les textes en TF-IDF puis entraîne `LogisticRegression`. Ajuster le vectoriseur exclusivement sur les textes d'entraînement.
-4. Définir une baseline simple et noter les paramètres : paramètres TF-IDF (par exemple unigrammes/bigrammes, `min_df`, limite de vocabulaire), régularisation/class_weight et graine. Si vous comparez plusieurs variantes, choisir avec la validation, jamais avec le test.
-5. Entraîner la variante retenue sur l'entraînement prévu. Calculer sur validation les métriques utiles si le protocole en prévoit une. Ne consulter le test qu'une fois les choix figés.
-6. Sur le test, calculer précision, rappel et F1 pour la classe positive malveillante, ainsi que les supports et la matrice de confusion. Conserver aussi les prédictions et, si possible, le score/probabilité de la classe malveillante.
-7. Sauvegarder localement le pipeline complet (vectoriseur et classifieur), les paramètres et les résultats. Indiquer la version de scikit-learn et la graine.
+## Ce qu'il faut avoir avant de commencer
 
-## Livrables et format des prédictions
+- Le corpus final et son manifeste de provenance ;
+- le compte rendu EDA et la décision « go » pour l'entraînement ;
+- la définition des classes, le mapping vers les valeurs utilisées par les modèles et la classe positive ;
+- les partitions train, validation et test déjà décidées, avec les groupes liés conservés ensemble ;
+- un identifiant stable par exemple et un emplacement local pour les artefacts ;
+- Python et les dépendances installées depuis `requirements.txt`.
 
-Placer les artefacts dans un emplacement local clairement nommé. L'export des prédictions doit comporter au minimum une clé `example_id` stable (ou la clé de correspondance validée), `y_true` et `y_pred`. Ajouter le score malveillant et la configuration/modèle si possible. Conserver les identifiants et l'ordre des classes tels que définis dans l'EDA.
+Si le corpus ou le mapping change après cette étape, le noter et prévenir Ayoub avant l'entraînement de DistilBERT.
 
-Transmettre à Ayoub et à la phase dashboard : le fichier de prédictions, les métriques, le modèle/paramètres, le split utilisé et toute exclusion appliquée. Ne pas envoyer uniquement une capture d'écran des scores.
+## Suivi pas à pas
 
-## Vérifications avant de conclure
+### 1. Vérifier les données d'entrée
 
-- Le pipeline TF-IDF a été ajusté sur train seulement.
-- Aucun choix de paramètres n'a été fait à partir des résultats test.
-- Les valeurs `y_true`/`y_pred` et la classe positive sont cohérentes avec l'EDA.
-- L'export est alignable par identifiant avec les prédictions DistilBERT, ou la raison de non-alignement est consignée.
-- Les erreurs, notamment les attaques manquées (faux négatifs), sont examinées.
+Confirmer le nombre d'exemples et les colonnes de chaque split. Vérifier que les textes sont non vides, que les labels sont reconnus et que l'identifiant est unique. Comparer ces informations au compte rendu EDA.
+
+### 2. Définir le protocole de baseline
+
+Écrire avant l'entraînement les choix à tester : représentation TF-IDF, paramètres du vocabulaire, n-grammes, régularisation de la régression logistique, gestion éventuelle du déséquilibre, graine et métrique de sélection. Garder le jeu de test fermé pendant tous les réglages.
+
+### 3. Construire le pipeline
+
+Le pipeline transforme le texte en caractéristiques TF-IDF puis entraîne une `LogisticRegression`. Le vectoriseur doit être ajusté sur train seulement. Les mêmes règles de préparation du texte s'appliquent à toutes les partitions ; préserver les formulations, marqueurs et ponctuations qui peuvent être des indices d'attaque.
+
+### 4. Choisir les paramètres
+
+Entraîner une variante de référence. Si plusieurs paramètres sont comparés, utiliser validation et une règle de choix annoncée à l'avance. Noter chaque variante et son résultat validation pour que le choix soit explicable. Ne pas choisir le meilleur modèle d'après le test.
+
+### 5. Évaluer une fois sur test
+
+Une fois les choix figés, calculer précision, rappel et F1 pour la classe malveillante, les supports par classe et la matrice de confusion. Conserver les scores/probabilités malveillants si disponibles. Examiner des erreurs représentatives, surtout les faux négatifs.
+
+### 6. Exporter et transmettre
+
+Exporter une ligne par exemple test avec `example_id`, `y_true`, `y_pred` et si possible `score_malicious`. Garder la même clé d'exemple et le même mapping que pour DistilBERT. Ajouter un petit fichier de métadonnées indiquant date, corpus/version, split, paramètres, graine et versions des bibliothèques.
+
+## Livrables à déposer ou transmettre
+
+1. Fiche d'expérience : protocole, paramètres essayés, choix final, graine, versions et matériel utile.
+2. Résultats test : métriques, supports, matrice de confusion et commentaire sur les erreurs.
+3. Export CSV des prédictions, conservant `example_id`, vérité terrain et prédiction.
+4. Pipeline entraîné sauvegardé localement si le poids le permet ; ne pas ajouter un artefact volumineux au dépôt sans décision du binôme.
+5. Message de passage à Ayoub et au responsable du dashboard confirmant corpus, split et format de l'export.
+
+## Fichiers à produire dans ce dossier
+
+| Fichier | Contenu attendu | À versionner ? |
+|---|---|---|
+| `baseline_experiment.md` | Corpus/version, split, transformations, paramètres essayés, critère de sélection, graine, versions logicielles et matériel. | Oui |
+| `baseline_metrics.json` ou `baseline_metrics.csv` | Métriques finales et supports, classe positive, ordre des labels et référence au test utilisé. | Oui, chiffres uniquement |
+| `baseline_test_predictions.csv` | Une ligne par exemple test : `example_id`, `y_true`, `y_pred`, `score_malicious` si disponible. | Selon les conditions des données ; ne pas inclure de texte source sans autorisation |
+| `baseline_confusion_matrix.png` | Matrice de confusion annotée avec classes et axes. | Oui |
+| `artifacts/` (local) | Pipeline entraîné complet et journaux utiles. | Non si lourd ; garder localement et ignorer par Git |
+
+L'export conserve les identifiants stables du corpus. Si les prédictions ou exemples ne peuvent pas être partagés, les garder localement et transmettre les métriques autorisées.
+
+## Checklist avant de remettre le travail
+
+- [ ] Le corpus et les partitions correspondent à la version validée en phase 1.
+- [ ] TF-IDF a été ajusté uniquement sur train.
+- [ ] La validation, et non le test, a servi aux choix de paramètres.
+- [ ] La classe positive et l'ordre des labels sont explicités.
+- [ ] Les métriques incluent le support et la matrice de confusion.
+- [ ] L'export contient un identifiant stable et s'aligne avec le futur export DistilBERT.
+- [ ] Les erreurs et les limites de la baseline sont consignées.

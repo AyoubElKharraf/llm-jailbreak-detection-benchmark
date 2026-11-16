@@ -1,39 +1,84 @@
-# Guide de rédaction du rapport final
+# Phase 5 — Rapport final
 
-**Responsable : Ayoub** — Échéance : **28 novembre 2026**.
+**Responsable : Ayoub**
+
+**Échéance de rendu : 28 novembre 2026**
 
 ## Objectif
 
-Raconter l'expérience de façon reproductible et critique : pourquoi le problème est étudié, quelles données et méthodes ont été utilisées, quels résultats ont été mesurés et dans quelles limites les conclusions sont valables. Utiliser `rapport_template.md` comme plan de départ.
+Présenter le projet de manière compréhensible, reproductible et critique. Le rapport doit décrire le corpus multi-sources réellement construit, comparer les modèles avec les résultats réellement mesurés et expliquer les limites. Utiliser `rapport_template.md` comme trame.
 
-## Documents à récupérer avant rédaction
+## Ce qu'il faut rassembler avant de rédiger
 
-- Compte rendu EDA : schéma, effectifs, labels, contrôle des groupes et protocole de split ;
-- fiche d'expérience baseline et fiche DistilBERT : paramètres, graine, versions et métriques ;
-- exports et tableau comparatif validés par Taoufik ;
-- références vérifiables du dataset, du modèle pré-entraîné et des outils utilisés.
+- Inventaire des sources, licences/conditions, manifeste et définition des labels de la phase 1 ;
+- compte rendu EDA et protocole anti-fuite validé par Taoufik ;
+- fiches d'expérience baseline et DistilBERT (paramètres, versions, graines, matériel) ;
+- exports, métriques, matrices de confusion et synthèse des erreurs du tableau de bord ;
+- références officielles des datasets, modèles et bibliothèques ;
+- consignes de présentation et format imposés par le cours, s'il y en a.
 
-## Étapes de rédaction
+## Plan de travail de rédaction
 
-1. **Introduction** : définir le problème, expliquer l'objectif du mini-projet et annoncer les deux approches comparées sans revendiquer une solution de sécurité complète.
-2. **Dataset** : citer `neuralchemy/Prompt-injection-dataset`, distinguer les configurations `core` et `full`, décrire les colonnes pertinentes, classes, catégories disponibles, effectifs mesurés et limites connues.
-3. **Protocole** : documenter splits, prévention des fuites, `group_id`, mapping des labels, graine, identifiants et conditions nécessaires à une comparaison équitable. Préciser si les modèles sont évalués sur les mêmes exemples.
-4. **Méthodes** : décrire TF-IDF + régression logistique et DistilBERT, les traitements, paramètres retenus, versions logicielles et matériel suffisamment pour reproduire l'expérience.
-5. **Résultats** : reporter les valeurs vérifiées de précision, rappel, F1, support et matrices de confusion. Définir la classe positive et les conventions. Ne pas remplir les chiffres avant la fin des évaluations.
-6. **Analyse** : expliquer les compromis observés et examiner les faux négatifs et faux positifs. Relier les interprétations aux observations sans tirer de conclusion au-delà du jeu évalué.
-7. **Limites** : discuter couverture du dataset, labels potentiellement ambigus, doublons/groupes, déséquilibre, configurations différentes, évolution des attaques et écart entre benchmark et prompts rencontrés en pratique.
-8. **Conclusion et suite** : répondre aux objectifs, résumer les constats mesurés et proposer des améliorations réalistes.
-9. Relire les chiffres en les comparant aux exports et au tableau de bord ; vérifier les citations et compléter les instructions de reproduction.
+### 1. Fixer le message et le périmètre
+
+Formuler l'objectif exact : détection d'injection, détection de jailbreak/demande nuisible, ou tâche plus large explicitement définie. Éviter d'utiliser ces termes comme synonymes si le corpus mélange des phénomènes différents. Énoncer les questions auxquelles les expériences peuvent réellement répondre.
+
+### 2. Décrire le corpus combiné
+
+Pour chaque source, donner son identifiant exact, sa version/date de récupération, sa taille retenue, ses champs utiles, sa langue, ses labels d'origine et sa contribution au corpus final. Expliquer les règles d'inclusion/exclusion, harmonisation, déduplication, conflits de labels et attribution. Ne pas additionner des effectifs avant déduplication comme s'ils étaient le nombre final d'exemples.
+
+### 3. Décrire la qualité et le protocole
+
+Présenter les répartitions mesurées par label, source, catégorie et split. Décrire le contrôle des groupes, doublons et quasi-doublons, les décisions de séparation, la graine et les précautions pour éviter que le modèle apprenne seulement des indices propres à une source. Préciser si une source entière a été gardée pour tester la généralisation.
+
+### 4. Expliquer les modèles
+
+Décrire la baseline TF-IDF + régression logistique et DistilBERT, leurs prétraitements, paramètres retenus, règle de sélection sur validation, environnement et versions. Inclure la longueur maximale et la troncature pour DistilBERT.
+
+### 5. Rapporter les résultats
+
+Reporter seulement les valeurs retrouvées dans les exports : précision, rappel, F1, supports et matrices de confusion. Définir la classe positive et la convention des métriques. Indiquer clairement si les deux modèles ont le même test. Ajouter les résultats par source/catégorie seulement si l'effectif est suffisant et le périmètre comparable.
+
+### 6. Analyser les erreurs et limites
+
+Étudier les faux négatifs et faux positifs, les catégories où les erreurs se concentrent, les biais liés aux sources, les labels incertains, le déséquilibre et l'absence éventuelle de données représentatives. Relier chaque interprétation aux observations disponibles.
+
+### 7. Conclure et relire
+
+Répondre aux objectifs sans généraliser au-delà du benchmark. Vérifier chaque chiffre contre le tableau de résultats et chaque source contre la bibliographie. Ajouter les consignes nécessaires à la reproduction et faire relire le rapport par Taoufik.
 
 ## Message obligatoire sur la sécurité
 
-Écrire clairement que le classifieur peut produire des faux positifs et des faux négatifs, être contourné et ne garantit pas une sécurité absolue en production. Les résultats d'un benchmark ne démontrent pas la sécurité d'un système LLM complet ; une défense doit être évaluée dans son contexte et s'inscrire dans une approche en profondeur.
+Préciser que les classifieurs peuvent produire des faux positifs et faux négatifs, être contournés et ne garantissent pas une sécurité absolue en production. Une performance sur ce corpus ne prouve pas la sécurité d'un système LLM complet ; le détecteur doit être évalué dans le contexte d'usage et s'inscrire dans une approche de défense en profondeur.
 
-## Vérification finale
+## Livrables
 
-- [ ] Chaque chiffre peut être retrouvé dans un résultat exporté.
-- [ ] Les limites de comparabilité `core`/`full` sont explicites.
-- [ ] Le contrôle anti-fuite est expliqué, avec ses limites.
-- [ ] Les erreurs et limites du dataset sont discutées.
-- [ ] Les sources, versions, paramètres et consignes de reproduction sont indiqués.
-- [ ] Le rapport ne présente pas le classifieur comme une garantie de sécurité.
+1. Rapport complété à partir de `rapport_template.md` ;
+2. tableaux/figures dont les chiffres concordent avec les exports ;
+3. bibliographie et citations des jeux de données, versions et modèles ;
+4. annexe de reproductibilité avec protocole et paramètres ;
+5. version relue par Taoufik avant le rendu.
+
+## Fichiers à produire dans ce dossier
+
+| Fichier | Contenu attendu | À versionner ? |
+|---|---|---|
+| `rapport_final.md` ou `rapport_final.docx` | Rapport complété depuis `rapport_template.md`, avec résultats vérifiés, références et analyse critique. | Oui |
+| `figures/` | Figures finales numérotées, légendées et citées dans le rapport. | Oui |
+| `references.bib` (si BibTeX est utilisé) | Références des sources, modèles et outils ; sinon les inclure dans le rapport. | Oui |
+| `reproduction.md` | Sources, split, versions, paramètres et étapes nécessaires pour reproduire les expériences. | Oui |
+| `annexes/` (si nécessaire) | Tableaux supplémentaires, dictionnaire des données et détails expérimentaux utiles. | Oui, sous réserve des conditions des données |
+
+Ne pas inclure dans le rapport prompts ou données sources si leur redistribution n'est pas autorisée. Citer les sources et décrire comment les récupérer selon leurs conditions.
+
+## Checklist finale
+
+- [ ] La tâche et les classes sont définies sans ambiguïté.
+- [ ] Les sources, versions, licences/conditions et transformations sont décrites.
+- [ ] Les effectifs finaux sont après harmonisation/déduplication.
+- [ ] Le split et les contrôles anti-fuite sont expliqués.
+- [ ] Les deux modèles sont comparés sur un périmètre identifié.
+- [ ] Chaque chiffre est vérifiable dans un artefact de résultat.
+- [ ] Les faux négatifs, faux positifs, limites du dataset et limites de généralisation sont abordés.
+- [ ] Le rapport affirme qu'un classifieur ne garantit pas une sécurité absolue en production.
+- [ ] Taoufik a relu les chiffres et les conclusions comparatives.
