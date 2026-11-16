@@ -1,0 +1,72 @@
+3. Comment réaliser votre projet ?
+Je vous propose une architecture en quatre parties.
+Partie 1 — Analyse du dataset
+Objectif : comprendre les données.
+
+Avec Python :
+- Charger le dataset.
+- Afficher les colonnes.
+- Analyser les catégories.
+- Mesurer la répartition des comportements.
+- Visualiser les données avec Matplotlib et Seaborn.
+Technologies :
+- Python
+- Pandas
+- Matplotlib
+- Seaborn
+Partie 2 — Tester la sécurité des LLM
+Objectif : mesurer la résistance de plusieurs modèles.
+
+Par exemple :
+- Llama
+- Mistral
+- GPT
+Vous pouvez comparer leurs réponses face aux mêmes demandes.
+
+Attention : utilisez un environnement de test contrôlé et des modèles/API autorisés.
+Partie 3 — Développer un mécanisme de défense
+C'est une partie intéressante pour apporter une contribution personnelle.
+
+Vous pouvez développer un système de protection qui analyse les prompts avant leur transmission au LLM.
+
+Exemple d'architecture :
+        Utilisateur
+             |
+             v
+       Input Prompt
+             |
+             v
+    Security Detection Layer
+             |
+       +-----+-----+
+       |           |
+    Safe         Unsafe
+       |           |
+       v           v
+      LLM       Refus
+       |
+       v
+    Réponse
+       |
+       v
+  Output Validation
+       |
+       v
+  Réponse utilisateur
+
+Vous pouvez notamment tester :
+- Détection des prompts malveillants.
+- Classification Safe / Unsafe.
+- Détection des tentatives de jailbreak.
+- Filtrage des réponses dangereuses.
+Partie 4 — Évaluation
+Vous devez mesurer les performances de votre système.
+
+Voici les métriques intéressantes :
+Métrique	Signification
+Attack Success Rate (ASR)	Pourcentage d'attaques réussies
+Accuracy	Pourcentage de prédictions correctes
+Precision	Fiabilité des prédictions positives
+Recall	Capacité à détecter les attaques
+F1-score	Équilibre entre précision et rappel
+False Positive Rate	Demandes légitimes bloquées à tort
