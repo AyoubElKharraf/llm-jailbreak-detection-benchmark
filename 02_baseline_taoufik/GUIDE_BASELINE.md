@@ -2,28 +2,28 @@
 
 **Responsable : Taoufik**
 
-**Données nécessaires :** corpus multi-sources validé dans `01_exploration_eda/`.
+**Données nécessaires :** configuration `core` de `neuralchemy/Prompt-injection-dataset`, validée dans `01_exploration_eda/`.
 
 ## Objectif
 
-Créer une première référence de classification avec une méthode classique. Elle servira à mesurer ce qu'un modèle relativement simple peut détecter et à comparer ensuite DistilBERT dans les mêmes conditions.
+Créer une première référence de classification avec une méthode classique sur `core`. Elle sera comparée à DistilBERT, entraîné sur `full`.
 
 ## Ce qu'il faut avoir avant de commencer
 
-- Le corpus final et son manifeste de provenance ;
+- La configuration `core` accessible et sa validation de source ;
 - le compte rendu EDA et la décision « go » pour l'entraînement ;
 - la définition des classes, le mapping vers les valeurs utilisées par les modèles et la classe positive ;
 - les partitions train, validation et test déjà décidées, avec les groupes liés conservés ensemble ;
 - un identifiant stable par exemple et un emplacement local pour les artefacts ;
 - Python et les dépendances installées depuis `requirements.txt`.
 
-Si le corpus ou le mapping change après cette étape, le noter et prévenir Ayoub avant l'entraînement de DistilBERT.
+La carte annonce que validation et test sont partagés avec `full`. Vérifier ce point en EDA avant comparaison. Si les exemples de test ne correspondent pas, prévenir Ayoub et documenter la limite.
 
 ## Suivi pas à pas
 
 ### 1. Vérifier les données d'entrée
 
-Confirmer le nombre d'exemples et les colonnes de chaque split. Vérifier que les textes sont non vides, que les labels sont reconnus et que l'identifiant est unique. Comparer ces informations au compte rendu EDA.
+Confirmer les tailles de splits et colonnes de `core`. Vérifier que les textes sont non vides, que les labels sont reconnus et que les identifiants sont uniques. Comparer ces informations au compte rendu EDA.
 
 ### 2. Définir le protocole de baseline
 

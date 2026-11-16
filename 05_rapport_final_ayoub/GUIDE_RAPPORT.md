@@ -6,11 +6,11 @@
 
 ## Objectif
 
-Présenter le projet de manière compréhensible, reproductible et critique. Le rapport doit décrire le corpus multi-sources réellement construit, comparer les modèles avec les résultats réellement mesurés et expliquer les limites. Utiliser `rapport_template.md` comme trame.
+Présenter le projet de manière compréhensible, reproductible et critique. Le rapport doit décrire la source NeurAlchemy retenue et ses configurations, comparer les modèles avec les résultats réellement mesurés et expliquer les limites. Utiliser `rapport_template.md` comme trame.
 
 ## Ce qu'il faut rassembler avant de rédiger
 
-- Inventaire des sources, licences/conditions, manifeste et définition des labels de la phase 1 ;
+- Inventaire et validation de la source NeurAlchemy, définition des labels et résultats EDA de la phase 1 ;
 - compte rendu EDA et protocole anti-fuite validé par Taoufik ;
 - fiches d'expérience baseline et DistilBERT (paramètres, versions, graines, matériel) ;
 - exports, métriques, matrices de confusion et synthèse des erreurs du tableau de bord ;
@@ -23,9 +23,9 @@ Présenter le projet de manière compréhensible, reproductible et critique. Le 
 
 Formuler l'objectif exact : détection d'injection, détection de jailbreak/demande nuisible, ou tâche plus large explicitement définie. Éviter d'utiliser ces termes comme synonymes si le corpus mélange des phénomènes différents. Énoncer les questions auxquelles les expériences peuvent réellement répondre.
 
-### 2. Décrire le corpus combiné
+### 2. Décrire le dataset retenu
 
-Pour chaque source, donner son identifiant exact, sa version/date de récupération, sa taille retenue, ses champs utiles, sa langue, ses labels d'origine et sa contribution au corpus final. Expliquer les règles d'inclusion/exclusion, harmonisation, déduplication, conflits de labels et attribution. Ne pas additionner des effectifs avant déduplication comme s'ils étaient le nombre final d'exemples.
+Donner l'identifiant exact, la version/date de récupération, les configurations `core`/`full`, les tailles observées, les champs utiles, la langue, les labels et les catégories. Expliquer la différence entre train original de `core` et train augmenté de `full`, ainsi que la vérification des jeux de validation/test. Attribuer la provenance des sources intégrées à la carte du fournisseur ; ne pas présenter une fusion manuelle réalisée par le binôme.
 
 ### 3. Décrire la qualité et le protocole
 

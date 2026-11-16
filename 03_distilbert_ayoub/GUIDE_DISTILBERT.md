@@ -4,7 +4,7 @@
 
 **Modèle de départ :** `distilbert-base-uncased`
 
-**Données nécessaires :** le même corpus et les mêmes partitions validés en phase 1 et utilisés pour la baseline.
+**Données nécessaires :** configuration `full` de `neuralchemy/Prompt-injection-dataset`. La baseline Taoufik utilise `core` du même dépôt.
 
 ## Objectif
 
@@ -12,7 +12,7 @@ Fine-tuner un modèle transformer pour classifier les prompts selon la définiti
 
 ## Ce qu'il faut avoir avant de commencer
 
-- Corpus, manifeste et compte rendu EDA finalisés ;
+- Configuration `full` accessible et compte rendu EDA finalisé ;
 - labels et mapping établis, avec `1` associé à la classe malveillante si c'est le mapping commun retenu ;
 - train, validation et test établis avec la stratégie anti-fuite convenue ;
 - identifiant stable des exemples ;
@@ -23,7 +23,7 @@ Fine-tuner un modèle transformer pour classifier les prompts selon la définiti
 
 ### 1. Reprendre exactement le protocole commun
 
-Charger le corpus convenu, vérifier les effectifs et les noms de colonnes, puis confirmer que les identifiants de train/validation/test sont ceux transmis à Taoufik. Ne pas refaire un split aléatoire indépendant : cela empêcherait une comparaison directe et pourrait créer des fuites par groupe.
+Charger `full`, vérifier les effectifs et les colonnes. La carte annonce que validation et test sont identiques à `core` ; confirmer par identifiants ou contenu que c'est le cas avant la comparaison avec Taoufik. Ne pas refaire un split aléatoire indépendant.
 
 ### 2. Vérifier labels et groupes
 

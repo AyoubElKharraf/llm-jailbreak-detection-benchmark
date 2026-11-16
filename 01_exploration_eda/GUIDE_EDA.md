@@ -1,91 +1,82 @@
-# Phase 1 — Construire et auditer le corpus
+# Phase 1 — Valider la source et auditer les données
 
-**Préparation et harmonisation : Ayoub**
+**Validation de la source : Ayoub**
 
-**Audit EDA et validation du protocole : Taoufik**
+**EDA et audit indépendant : Taoufik**
 
-Ce dossier couvre deux travaux liés : Ayoub prépare une collection unifiée et traçable ; Taoufik vérifie cette collection, son contenu et le protocole d'évaluation avant la baseline. La priorité est d'obtenir des exemples correctement définis et traçables, pas seulement un grand nombre de lignes.
+## Décisions du binôme
 
-## Décision à prendre avant la collecte
+- Tâche : classification binaire combinée injection + jailbreak.
+- Labels : `0` = bénin/normal ; `1` = malveillant (injection ou jailbreak).
+- Dataset principal : `neuralchemy/Prompt-injection-dataset`.
+- Configurations prévues : `core` pour la baseline classique de Taoufik, `full` pour DistilBERT d'Ayoub.
+- Aucune fusion manuelle avec S-Labs, deepset, JailbreakBench ou HarmBench n'est prévue.
 
-Le projet vise-t-il à classer **les prompt injections**, ou à classer plus largement les **jailbreaks / demandes nuisibles** ? Ces tâches sont proches mais pas identiques. Un jailbreak peut être une demande nuisible directe sans injection d'instructions, tandis qu'une injection cherche à détourner des instructions dans un contexte donné. Il faut fixer une définition opérationnelle de « malveillant » avant de combiner les sources et l'écrire dans le compte rendu.
+Le dépôt NeurAlchemy annonce que `core` contient des exemples originaux sans augmentation, tandis que `full` ajoute des exemples augmentés à l'entraînement. Il annonce également les mêmes exemples de validation et de test pour les deux configurations. Ayoub et Taoufik doivent le vérifier sur les données réellement chargées. Les détails de provenance des sources intégrées seront attribués à NeurAlchemy dans le rapport, et non présentés comme une collecte du binôme.
 
-La liste « Prompt Injection Detection Dataset » doit être identifiée par son URL ou son identifiant de dépôt exact : ce nom générique désigne plusieurs corpus. Vérifier sa carte de dataset, son schéma, sa licence et ses sources avant de l'ajouter.
+## A. Travail d'Ayoub — valider la source retenue
 
-## Sources envisagées et vigilance
+### Ce qu'il faut
 
-| Source envisagée | Vérifications à faire avant inclusion |
-|---|---|
-| `JailbreakBench` / `JBB-Behaviors` | Distinguer le jeu de comportements bénins/nuisibles des chaînes de jailbreak soumises et des réponses de modèles. Le dépôt décrit 100 comportements nuisibles et 100 bénins, avec champs `Behavior`, `Goal`, `Target`, `Category`, `Source` ; ce ne sont pas automatiquement des exemples de prompts d'injection prêts à étiqueter. Définir précisément quel champ représente l'entrée à classifier. |
-| `Prompt Injection Detection Dataset` | Confirmer le dépôt précis, les labels, la langue, les colonnes et la provenance. Par exemple, `hlyn-labs/prompt-injection-judge-deberta-dataset` est une collection annoncée comme fusionnant 12 sources, dont `deepset` et `neuralchemy`, et l'accès à ses fichiers demande d'accepter ses conditions. Si c'est le dataset visé, ne pas ajouter une seconde fois ses sources incluses. |
-| `deepset/prompt-injections` | Examiner `text`, `label`, la langue, la taille et la licence actuellement affichée sur la carte Hugging Face. Garder la source/provenance et contrôler les doublons avec toutes les autres sources. |
-| HarmBench | Vérifier la version/fichier utilisé et distinguer prompts de comportements, prompts d'attaque, réponses et jugements de succès. HarmBench est un benchmark de red teaming et de refus ; ses champs ne sont pas tous des labels directs « injection/bénin ». Définir une règle d'inclusion et de labellisation avant utilisation. |
-
-Les dépôts et leurs versions peuvent changer. Consigner l'URL exacte, la révision/commit ou date de récupération, la configuration/split et la licence/conditions de chaque source. Vérifier les droits de redistribution avant de publier le corpus combiné ; si besoin, ne publier que le manifeste et les instructions de reconstruction.
-
-## A. Travail d'Ayoub — collecte et harmonisation
-
-### Ce qu'il faut préparer
-
-- Accès aux pages officielles Hugging Face/GitHub de chaque source ; accès réseau pour les récupérer.
-- Un tableau d'inventaire des sources et une définition écrite de la tâche cible.
-- Un emplacement de travail local pour les données brutes et le corpus préparé. Ne pas écraser les originaux.
-- Une décision avec Taoufik sur les colonnes communes et la partition finale avant l'entraînement.
+- Accès à la carte Hugging Face et au dataset `neuralchemy/Prompt-injection-dataset` ;
+- Python 3 et un accès Internet pour télécharger les fichiers ;
+- le mapping binaire et les configurations convenus ci-dessus ;
+- un fichier de notes de validation. Ne pas copier le dataset brut dans le dépôt Git.
 
 ### Étapes
 
-1. **Inventorier chaque source séparément.** Pour chaque dataset, relever l'identifiant exact, URL, date/révision, licence/conditions, configuration, splits, taille, colonnes, langue et signification des labels. Conserver une copie ou référence des métadonnées utilisées.
-2. **Choisir les unités admissibles.** Préciser si l'exemple est un prompt utilisateur, une chaîne d'injection, un comportement/objectif nuisible ou un texte de réponse. Ne pas mélanger ces unités comme si elles étaient équivalentes. Exclure ou isoler les données qui ne correspondent pas à la définition cible.
-3. **Définir le schéma canonique** avec au minimum : `text` (texte réellement classifié), `label` (mapping documenté), `source_dataset`, `source_split`, `source_id` ou index d'origine, `attack_type` si disponible, `language` si connue et `group_id`/groupe de provenance si possible. Garder les colonnes originales utiles dans un fichier de provenance ou des champs préservés.
-4. **Harmoniser les labels explicitement.** Écrire pour chaque label original sa conversion ou sa raison d'exclusion. Ne jamais attribuer automatiquement « malveillant » à toutes les lignes HarmBench/JailbreakBench sans confirmer que le champ est bien un prompt d'attaque correspondant à la tâche.
-5. **Nettoyer sans dénaturer.** Retirer les lignes vides, normaliser uniquement les aspects techniques nécessaires, préserver le texte original et noter toute transformation. Détecter doublons exacts et conflits de labels. Pour les doublons, conserver la provenance de toutes les sources ; en cas de labels contradictoires, arbitrer selon une règle écrite ou exclure le cas ambigu.
-6. **Prévenir le leakage.** Regrouper les doublons et exemples apparentés (même prompt, même comportement, même famille d'attaque ou même `group_id`) dans une seule partition. Faire le split après déduplication. Si possible, garder une source entière pour un test de généralisation « source inconnue », en plus d'un test standard stratifié ; ne pas laisser les deux partitions contenir des variantes quasi identiques.
-7. **Préparer un corpus traçable**, avec une clé stable par exemple et un manifeste indiquant quelles sources/lignes ont été incluses, exclues ou dédupliquées. Garder les données de test isolées du train et de la validation.
-8. **Transmettre à Taoufik** le schéma, mapping des labels, manifeste, règles de nettoyage/déduplication, split et graine, ainsi que les contrôles déjà effectués. Ne pas transmettre un CSV sans documentation.
+1. Consulter la carte officielle et consigner l'identifiant exact, la révision disponible, la licence affichée, les configurations, le schéma et les sources amont déclarées.
+2. Depuis la racine du dépôt, télécharger les deux configs : `python 01_exploration_eda/download_dataset.py`. Pour une seule config : ajouter `--config core` ou `--config full`.
+3. Le script enregistre les fichiers Parquet sous `data_local/neuralchemy/<revision>/<config>/` et crée `download_manifest.json`. Il vérifie taille et empreinte SHA-256 ; `data_local/` est ignoré par Git.
+4. Inspecter séparément `core` et `full`. Noter pour chaque split sa taille, ses colonnes et ses types ; comparer aux nombres annoncés et signaler toute différence.
+5. Vérifier les valeurs réelles de `label` et quelques exemples par classe : `0` bénin, `1` malveillant.
+6. Examiner `category`, `source`, `severity`, `group_id`, `augmented` et `tags`. Noter les catégories d'injection, de jailbreak et les exemples bénins.
+7. Comparer validation et test des configs. Ayoub a déjà comparé via l'API les multisets de textes et labels ; Taoufik peut refaire le contrôle depuis les fichiers locaux.
+8. Vérifier que `group_id` ne traverse pas train, validation et test. Dans `full`, vérifier si les variantes augmentées restent dans train.
+9. Compléter `source_validation.md` avec les résultats locaux, les écarts et les contrôles restant à faire.
+10. Transmettre à Taoufik la même révision, le dictionnaire, les tailles/splits et les contrôles à poursuivre. Il peut télécharger les mêmes fichiers en exécutant le script.
+
+### Livrable d'Ayoub
+
+`source_validation.md` : note courte et vérifiable décrivant la version/source, les configs, tailles, colonnes, mapping des labels, comparaison `core`/`full`, contrôle des groupes et questions ouvertes.
 
 ## B. Travail de Taoufik — EDA et audit avant entraînement
 
+### Ce qu'il faut
+
+- `source_validation.md` rempli par Ayoub ;
+- les deux configurations `core` et `full` accessibles ;
+- un emplacement pour `eda_report.md` et les figures.
+
 ### Étapes
 
-1. Vérifier que les sources, volumes et règles annoncés par Ayoub correspondent au manifeste et au corpus remis.
-2. Examiner colonnes, types, quelques exemples par source et label, valeurs manquantes, textes vides, doublons et conflits de labels.
-3. Mesurer les effectifs et pourcentages par label, source, catégorie d'attaque, langue et split. Noter les sources qui ne possèdent pas de classe bénigne ou malveillante, ou dont les labels sont indirects.
-4. Comparer les distributions et longueurs de texte par source. Chercher des indices de raccourcis (par exemple le modèle pourrait apprendre la source, le format, une phrase modèle ou une langue plutôt que la notion d'attaque).
-5. Vérifier les recouvrements de `group_id`, identifiants, doublons exacts et similarités proches entre train/validation/test. La déduplication exacte seule ne prouve pas l'absence de fuite.
-6. Décider si le corpus est suffisamment cohérent pour entraîner le classifieur. Si les sources ont des définitions incompatibles, proposer un sous-ensemble ou des évaluations séparées plutôt que forcer un label binaire douteux.
-7. Valider avec Ayoub le protocole, puis communiquer à Taoufik/Ayoub les constats et décisions afin que baseline et DistilBERT utilisent la même définition de tâche et un test comparable.
-
-## Livrables attendus dans ce dossier
-
-1. **Inventaire des datasets** : dépôt/version, licence/conditions, contenu, labels et décision d'inclusion.
-2. **Définition de la tâche et dictionnaire de données** : ce que signifie chaque classe et chaque colonne canonique.
-3. **Manifeste de construction** : transformations, exclusions, déduplication, conflits, provenance et split ; permettre de reconstruire le corpus sans perdre la source de chaque ligne.
-4. **Compte rendu EDA de Taoufik** : tableaux/figures et vérifications ci-dessus, avec décisions et limites.
-5. **Décision de passage** : corpus validé pour l'entraînement, corpus à corriger, ou protocole révisé.
+1. Refaire les contrôles essentiels d'Ayoub de façon indépendante : splits, colonnes, tailles et labels.
+2. Mesurer les effectifs et pourcentages de chaque label pour train, validation et test, séparément pour `core` et `full`.
+3. Compter les exemples par `category`, `source`, `severity` et valeur de `augmented`, globalement et par split. Distinguer les catégories d'injection, jailbreak et benign selon les valeurs réellement observées.
+4. Analyser les valeurs manquantes, textes vides, doublons exacts et longueurs de texte. Comparer les distributions par classe et par split.
+5. Contrôler `group_id`, les recouvrements de texte/ID entre splits et le contenu augmenté de `full`. La déclaration de la carte sur l'absence de fuite est à vérifier, pas à reprendre comme un résultat du projet.
+6. Examiner si les deux configs ont les mêmes exemples de validation/test. Si ce n'est pas le cas, documenter la différence et décider avec Ayoub comment rendre l'évaluation comparable.
+7. Rédiger les résultats mesurés, figures, limites et décision de passage dans `eda_report.md`.
 
 ## Fichiers à produire dans ce dossier
 
-Créer les fichiers suivants au fur et à mesure. Ces noms sont proposés pour que les deux membres échangent des livrables faciles à retrouver.
-
 | Fichier | Responsable | Contenu attendu | À versionner ? |
 |---|---|---|---|
-| `sources_inventory.md` | Ayoub | Tableau des sources : URL/identifiant, version ou date, licence/conditions, schéma, labels, décision d'inclusion et provenance. | Oui |
-| `data_dictionary.md` | Ayoub + Taoufik | Définition du problème, classes, mapping des labels d'origine, colonnes canoniques et règles d'inclusion/exclusion. | Oui |
-| `corpus_manifest.csv` | Ayoub | Une ligne par exemple conservé : `example_id`, source, split d'origine, identifiant d'origine, label mappé et groupe si disponible. | Oui si le manifeste ne redistribue pas de contenu soumis à restriction ; sinon documenter les références sans texte brut |
-| `preparation_log.md` | Ayoub | Chargement, nettoyage, déduplication, conflits de labels, exclusions, transformations et limites. | Oui |
-| `eda_report.md` | Taoufik | Résultats mesurés, tableaux, contrôles qualité/fuite et décision de validation du corpus. | Oui |
-| `figures/` | Taoufik | Graphiques sur les classes, sources, catégories et longueurs, avec titres/légendes. | Oui, s'ils sont légers et dérivés |
-| `dataset_final.*` | Ayoub | Corpus harmonisé utilisé par les modèles et format choisi par le binôme. | Généralement non si volumineux ou soumis à restriction ; conserver localement et ignorer par Git |
+| `sources_inventory.md` | Ayoub | Source choisie, périmètre et configurations prévues. | Oui |
+| `download_dataset.py` | Ayoub | Télécharge les Parquet `core`/`full` à la révision figée et vérifie leurs SHA-256. | Oui |
+| `source_validation.md` | Ayoub | Révision/date, tailles et colonnes observées, labels, comparaison des configs et contrôle des groupes. | Oui ; pas de prompts bruts |
+| `data_dictionary.md` | Ayoub + Taoufik | Définitions confirmées des champs et des catégories/labels utilisés. | Oui |
+| `eda_report.md` | Taoufik | Tableaux, distributions, contrôles qualité/fuite, conclusions et décision de passage. | Oui |
+| `figures/` | Taoufik | Graphiques lisibles sur labels, catégories, sources, longueurs et splits. | Oui si légers et dérivés |
 
-Ne pas committer les téléchargements bruts, caches Hugging Face ou données dont la redistribution n'a pas été vérifiée. Si le corpus final ne peut pas être partagé, conserver un manifeste adapté et les instructions de reconstruction depuis les sources officielles.
+Le dataset demeure sur Hugging Face. Ne pas versionner ses copies, ses caches ou ses textes bruts dans ce dépôt.
 
-## Contrôle avant la phase baseline / DistilBERT
+## Passage à la phase suivante
 
-- [ ] Le nom exact et la version de chaque source sont enregistrés.
-- [ ] La définition « prompt injection » ou « jailbreak/demande nuisible » est explicite.
-- [ ] Les unités d'observation sont cohérentes ; prompts, comportements et réponses ne sont pas confondus.
-- [ ] Le mapping des labels est justifié source par source.
-- [ ] Les conditions de licence/redistribution ont été vérifiées et les sources sont attribuables.
-- [ ] Les doublons et exemples apparentés restent dans une même partition.
-- [ ] Les distributions par source et split sont connues ; les raccourcis de source ont été considérés.
-- [ ] Ayoub et Taoufik se sont mis d'accord sur le schéma, la cible, le split et l'identifiant stable.
+- [ ] Configs `core`/`full`, colonnes, tailles et splits confirmés au chargement.
+- [ ] Mapping confirmé : `0` bénin, `1` malveillant.
+- [ ] Catégories et métadonnées nécessaires à l'analyse comprises.
+- [x] Textes et labels de validation/test `core`/`full` comparés via l'API officielle ; multisets identiques.
+- [ ] `group_id` et variantes augmentées contrôlés ; les limites sont consignées.
+- [ ] Rapport EDA et décision de Taoufik remis à Ayoub.
+- [ ] Protocole et données retenus identiques pour le passage baseline/DistilBERT, sauf différence documentée.

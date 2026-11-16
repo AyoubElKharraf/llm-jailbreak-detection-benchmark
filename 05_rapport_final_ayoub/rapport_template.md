@@ -13,18 +13,19 @@
 ### 1.2 Définition de la tâche : prompt injection, jailbreak ou tâche combinée
 ### 1.3 Objectifs et questions de recherche
 
-## 2. Corpus multi-sources
+## 2. Dataset retenu
 
-### 2.1 Sources et versions utilisées
+### 2.1 Source, version et configurations (`core` / `full`)
 
-| Source | Version/date | Exemples retenus | Champs/labels d'origine | Décision d'inclusion |
-|---|---|---:|---|---|
-| À compléter | À compléter | À mesurer | À décrire | À justifier |
+| Configuration | Version/date | Train | Validation | Test | Prétraitement/augmentation |
+|---|---|---:|---:|---:|---|
+| `core` | À compléter | À mesurer | À mesurer | À mesurer | À vérifier |
+| `full` | À compléter | À mesurer | À mesurer | À mesurer | À vérifier |
 
-### 2.2 Définition des classes et harmonisation des labels
-### 2.3 Nettoyage, doublons, contradictions et provenance
-### 2.4 Distribution des classes, sources, langues et catégories
-### 2.5 Limites et biais possibles du corpus
+### 2.2 Définition des classes et labels
+### 2.3 Colonnes, provenance et catégories d'attaque
+### 2.4 Distribution des classes et catégories
+### 2.5 Limites et biais possibles du dataset
 
 ## 3. Protocole expérimental
 

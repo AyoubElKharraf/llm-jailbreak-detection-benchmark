@@ -5,14 +5,14 @@
 
 ## À quoi sert ce dépôt ?
 
-Ce dépôt est le **carnet de route du projet**. Il explique quoi faire, dans quel ordre, avec quelles données, quels contrôles effectuer et quels livrables laisser au collègue. Il ne contient pas de scripts Python : le code sera créé au moment de réaliser chaque étape, dans les dossiers correspondants.
+Ce dépôt est le **carnet de route du projet**. Il explique quoi faire, dans quel ordre, avec quelles données, quels contrôles effectuer et quels livrables laisser au collègue. Il contient un petit script pour sauvegarder localement les données de phase 1 ; les scripts d'entraînement seront créés pendant les phases concernées.
 
-Le projet consiste à étudier et comparer deux détecteurs de prompts bénins ou malveillants. La proposition actuelle est de construire un corpus multi-sources, en étudiant notamment `JailbreakBench`, `deepset/prompt-injections`, HarmBench et un dataset de détection d'injection dont l'identifiant exact reste à confirmer. `neuralchemy/Prompt-injection-dataset` peut faire partie de l'inventaire. Les guides doivent aboutir à une définition de tâche commune avant de fusionner les exemples.
+Le projet compare deux détecteurs binaires de prompts bénins et malveillants (prompt injection ou jailbreak) à partir de `neuralchemy/Prompt-injection-dataset`. Le binôme ne prévoit pas de fusionner manuellement d'autres datasets. La baseline utilise la configuration `core` et DistilBERT la configuration `full`, conformément au protocole initial.
 
 - une baseline **TF-IDF + régression logistique** ;
 - un modèle **DistilBERT fine-tuné**.
 
-Les deux modèles devraient utiliser le même corpus harmonisé et le même protocole de split pour permettre une comparaison directe. Les configurations `core`/`full` de neuralchemy ne sont donc plus automatiquement les deux jeux d'entraînement : si le binôme souhaite conserver cette contrainte initiale, il faut la concilier explicitement avec le corpus combiné et documenter tout écart.
+La carte annonce les mêmes validations et tests pour `core` et `full`, tandis que `full` ajoute des exemples augmentés à l'entraînement. Vérifier ces éléments sur les données réellement chargées avant la comparaison.
 
 La comparaison porte sur la précision, le rappel, le F1-score et les matrices de confusion. Le rapport doit discuter les limites du dataset et rappeler qu'un classifieur ne garantit pas la sécurité d'un système LLM en production.
 
@@ -20,25 +20,25 @@ La comparaison porte sur la précision, le rappel, le F1-score et les matrices d
 
 | Responsable | Travail | Dossiers à suivre |
 |---|---|---|
-| **Ayoub** | Préparation et harmonisation du corpus multi-sources, fine-tuning de DistilBERT, rédaction et analyse critique du rapport final | `01_exploration_eda/` (collecte/harmonisation), `03_distilbert_ayoub/`, `05_rapport_final_ayoub/` |
-| **Taoufik** | Audit EDA du corpus combiné, baseline TF-IDF + régression logistique, tableau de bord comparatif | `01_exploration_eda/` (audit EDA), `02_baseline_taoufik/`, `04_dashboard_comparaison_taoufik/` |
+| **Ayoub** | Validation de la source et des configurations, fine-tuning DistilBERT sur `full`, rapport final | `01_exploration_eda/` (validation de source), `03_distilbert_ayoub/`, `05_rapport_final_ayoub/` |
+| **Taoufik** | EDA des configs, baseline TF-IDF + régression logistique sur `core`, tableau de bord comparatif | `01_exploration_eda/` (audit EDA), `02_baseline_taoufik/`, `04_dashboard_comparaison_taoufik/` |
 
 ## Par où commencer ?
 
 1. Lire ce README pour comprendre le projet et son ordre de réalisation.
-2. **Ayoub commence par la partie collecte/harmonisation de `01_exploration_eda/GUIDE_EDA.md`**, puis transmet à Taoufik un corpus traçable et son manifeste.
-3. **Taoufik réalise ensuite l'audit EDA dans le même guide**. Ayoub et Taoufik valident ensemble la définition de la tâche, les labels, groupes, split et identifiant des exemples avant l'entraînement.
-4. Réaliser baseline et DistilBERT selon leurs guides respectifs sur le corpus et split convenus. Chaque responsable transmet les prédictions du même jeu de test.
+2. **Ayoub valide la source et les configs dans `01_exploration_eda/GUIDE_EDA.md`**, sans créer de corpus fusionné.
+3. **Taoufik réalise ensuite l'EDA**. Ensemble, vous vérifiez labels, groupes et comparabilité des tests `core`/`full`.
+4. Réaliser la baseline sur `core` et DistilBERT sur `full`. Vérifier que le jeu de test est commun avant comparaison.
 5. Construire le tableau de bord, puis terminer le rapport avec les mesures réellement obtenues et leurs limites.
 
 ## Ordre du travail et passage de relais
 
 | Phase | Dossier / guide | À la fin, on doit avoir… | Passage de relais |
 |---|---|---|---|
-| 1a. Construire le corpus | `01_exploration_eda/GUIDE_EDA.md` — Ayoub | Inventaire des sources, corpus harmonisé, provenance, mapping des labels et manifeste de construction | Ayoub transmet à Taoufik le corpus et les règles utilisées |
-| 1b. Auditer le corpus | `01_exploration_eda/GUIDE_EDA.md` — Taoufik | Distributions, contrôle des groupes/fuites, cohérence des labels et décision de split | Les deux valident ensemble la définition de la tâche et le protocole commun |
-| 2. Établir la baseline | `02_baseline_taoufik/GUIDE_BASELINE.md` | Baseline entraînée sur le corpus validé, paramètres consignés et prédictions du test exportées | Taoufik transmet les prédictions et l'identifiant de chaque exemple |
-| 3. Fine-tuner le transformer | `03_distilbert_ayoub/GUIDE_DISTILBERT.md` | Modèle et tokenizer sauvegardés, paramètres consignés et prédictions du même test exportées | Ayoub transmet les prédictions alignables avec la baseline |
+| 1a. Valider la source | `01_exploration_eda/GUIDE_EDA.md` — Ayoub | Configs, schéma, labels et splits vérifiés | Ayoub transmet ses constats à Taoufik |
+| 1b. Auditer les données | `01_exploration_eda/GUIDE_EDA.md` — Taoufik | EDA, contrôle des groupes/fuites et décision de passage | Ensemble, validation de la comparabilité `core`/`full` |
+| 2. Établir la baseline | `02_baseline_taoufik/GUIDE_BASELINE.md` | Baseline sur `core`, paramètres et prédictions de test exportés | Taoufik transmet prédictions et identifiants de test |
+| 3. Fine-tuner le transformer | `03_distilbert_ayoub/GUIDE_DISTILBERT.md` | Modèle sur `full`, paramètres et prédictions de test exportés | Ayoub transmet les prédictions alignables avec la baseline |
 | 4. Comparer | `04_dashboard_comparaison_taoufik/GUIDE_DASHBOARD.md` | Métriques, matrices de confusion et tableau de bord fondés sur des tests comparables | Taoufik fournit les résultats consolidés à Ayoub |
 | 5. Rédiger | `05_rapport_final_ayoub/GUIDE_RAPPORT.md` et `rapport_template.md` | Rapport complet, chiffres vérifiés, limites et conclusion | Ayoub vérifie que les résultats correspondent aux artefacts et décisions des phases précédentes |
 
@@ -52,7 +52,7 @@ La comparaison porte sur la précision, le rappel, le F1-score et les matrices d
 
 ## Règles communes pour un résultat fiable
 
-1. Vérifier les données réellement chargées : les schémas, labels et splits peuvent différer d'une source à l'autre. Si les configurations `core`/`full` de neuralchemy sont conservées, noter où elles interviennent.
+1. Vérifier les schémas, labels et splits réellement chargés, même si la carte du dataset les décrit.
 2. Garder le jeu de test à l'écart de l'entraînement et du choix des paramètres.
 3. Si `group_id` existe et représente des exemples liés, un même groupe ne doit pas apparaître dans plusieurs partitions. Vérifier aussi les doublons et documenter les limites de ces contrôles.
 4. Pour comparer les modèles, aligner leurs prédictions par identifiant d'exemple et confirmer que les labels réels concordent. Si les configurations ne donnent pas les mêmes exemples, le dire clairement et éviter une comparaison directe trompeuse.
@@ -61,7 +61,7 @@ La comparaison porte sur la précision, le rappel, le F1-score et les matrices d
 
 ## Contenu des dossiers
 
-- `01_exploration_eda/` : guide commun de construction du corpus multi-sources (Ayoub) et d'audit EDA (Taoufik).
+- `01_exploration_eda/` : validation de la source NeurAlchemy par Ayoub et audit EDA par Taoufik.
 - `02_baseline_taoufik/` : guide de réalisation de la baseline classique.
 - `03_distilbert_ayoub/` : guide de fine-tuning et d'export des prédictions.
 - `04_dashboard_comparaison_taoufik/` : guide de comparaison et de visualisation.
