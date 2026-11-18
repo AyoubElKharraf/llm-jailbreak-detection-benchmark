@@ -1,0 +1,19 @@
+{
+  "model": "DistilBERT (distilbert-base-uncased)",
+  "dataset": "neuralchemy/Prompt-injection-dataset (full)",
+  "split_evaluated": "test",
+  "test_samples": 942,
+  "accuracy": 0.9628,
+  "precision_malicious": 0.9658,
+  "recall_malicious": 0.971,
+  "f1_malicious": 0.9684,
+  "macro_f1": 0.9617,
+  "roc_auc": 0.9955,
+  "confusion_matrix": {
+    "true_negative_benign": 371,
+    "false_positive_benign_as_malicious": 19,
+    "false_negative_malicious_missed": 16,
+    "true_positive_malicious_detected": 536
+  },
+  "training_time_minutes": 16.8
+}

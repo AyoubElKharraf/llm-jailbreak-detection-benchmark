@@ -71,10 +71,10 @@ Utiliser la même clé `example_id` que la baseline. Ne pas committer les checkp
 
 ## Checklist avant de remettre le travail
 
-- [ ] Le corpus, mapping des labels et split sont les mêmes que ceux de la baseline.
-- [ ] Aucun groupe lié ne traverse les partitions.
-- [ ] Les paramètres ont été choisis sans consulter le test.
-- [ ] La longueur maximale et l'effet de troncature sont documentés.
-- [ ] Les métriques et supports suivent la convention commune.
-- [ ] L'export comporte une clé stable, `y_true`, `y_pred` et idéalement le score.
-- [ ] Modèle, tokenizer, versions et graine sont sauvegardés ou consignés.
+- [x] Le corpus, mapping des labels et split sont les mêmes que ceux de la baseline.
+- [x] Aucun groupe lié ne traverse les partitions.
+- [x] Les paramètres ont été choisis sans consulter le test.
+- [x] La longueur maximale et l'effet de troncature sont documentés.
+- [x] Les métriques et supports suivent la convention commune.
+- [x] L'export comporte une clé stable, `y_true`, `y_pred` et idéalement le score.
+- [x] Modèle, tokenizer, versions et graine sont sauvegardés ou consignés.
