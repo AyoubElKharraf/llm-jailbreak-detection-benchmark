@@ -1,0 +1,13 @@
+configuration,split,label,classe,nombre,pourcentage
+core,train,0,Benign,1741,39.65
+core,train,1,Malicious,2650,60.35
+core,validation,0,Benign,407,43.25
+core,validation,1,Malicious,534,56.75
+core,test,0,Benign,390,41.4
+core,test,1,Malicious,552,58.6
+full,train,0,Benign,5156,37.0
+full,train,1,Malicious,8778,63.0
+full,validation,0,Benign,407,43.25
+full,validation,1,Malicious,534,56.75
+full,test,0,Benign,390,41.4
+full,test,1,Malicious,552,58.6
