@@ -73,10 +73,10 @@ Le dataset demeure sur Hugging Face. Ne pas versionner ses copies, ses caches ou
 
 ## Passage à la phase suivante
 
-- [ ] Configs `core`/`full`, colonnes, tailles et splits confirmés au chargement.
-- [ ] Mapping confirmé : `0` bénin, `1` malveillant.
-- [ ] Catégories et métadonnées nécessaires à l'analyse comprises.
+- [x] Configs `core`/`full`, colonnes, tailles et splits confirmés au chargement.
+- [x] Mapping confirmé : `0` bénin, `1` malveillant.
+- [x] Catégories et métadonnées nécessaires à l'analyse comprises.
 - [x] Textes et labels de validation/test `core`/`full` comparés via l'API officielle ; multisets identiques.
-- [ ] `group_id` et variantes augmentées contrôlés ; les limites sont consignées.
-- [ ] Rapport EDA et décision de Taoufik remis à Ayoub.
-- [ ] Protocole et données retenus identiques pour le passage baseline/DistilBERT, sauf différence documentée.
+- [x] `group_id` et variantes augmentées contrôlés ; les limites sont consignées.
+- [x] Rapport EDA et décision de Taoufik remis à Ayoub.
+- [x] Protocole et données retenus identiques pour le passage baseline/DistilBERT, sauf différence documentée.

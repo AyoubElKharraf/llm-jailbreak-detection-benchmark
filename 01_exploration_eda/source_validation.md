@@ -52,7 +52,7 @@ La carte décrit `core` comme le train original sans augmentation et `full` comm
 - [x] Comparer textes et labels validation/test de `core` et `full` via l’API : multisets identiques.
 - [x] Vérifier `group_id` sur les splits : aucun groupe commun entre deux partitions.
 - [x] Vérifier le lien entre exemples originaux et augmentés dans `full` : les 4 391 lignes originales sont complétées par 9 645 lignes augmentées dans le train ; validation/test ne contiennent aucune ligne augmentée.
-- [ ] Produire l’EDA détaillée, les figures et l’analyse interprétative des catégories, sources, sévérités et longueurs (travail de Taoufik).
+- [x] Produire l’EDA détaillée, les figures et l’analyse interprétative des catégories, sources, sévérités et longueurs (travail de Taoufik — consigné dans `eda_report.md`).
 
 La carte affirme que le split est fait par groupe et annonce zéro fuite selon ses contrôles. Taoufik doit refaire le contrôle utile pour notre protocole et distinguer les résultats de notre audit de ceux rapportés par le fournisseur.
 

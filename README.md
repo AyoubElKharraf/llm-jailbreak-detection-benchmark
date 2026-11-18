@@ -33,14 +33,14 @@ La comparaison porte sur la précision, le rappel, le F1-score et les matrices d
 
 ## Ordre du travail et passage de relais
 
-| Phase | Dossier / guide | À la fin, on doit avoir… | Passage de relais |
-|---|---|---|---|
-| 1a. Valider la source | `01_exploration_eda/GUIDE_EDA.md` — Ayoub | Configs, schéma, labels et splits vérifiés | Ayoub transmet ses constats à Taoufik |
-| 1b. Auditer les données | `01_exploration_eda/GUIDE_EDA.md` — Taoufik | EDA, contrôle des groupes/fuites et décision de passage | Ensemble, validation de la comparabilité `core`/`full` |
-| 2. Établir la baseline | `02_baseline_taoufik/GUIDE_BASELINE.md` | Baseline sur `core`, paramètres et prédictions de test exportés | Taoufik transmet prédictions et identifiants de test |
-| 3. Fine-tuner le transformer | `03_distilbert_ayoub/GUIDE_DISTILBERT.md` | Modèle sur `full`, paramètres et prédictions de test exportés | Ayoub transmet les prédictions alignables avec la baseline |
-| 4. Comparer | `04_dashboard_comparaison_taoufik/GUIDE_DASHBOARD.md` | Métriques, matrices de confusion et tableau de bord fondés sur des tests comparables | Taoufik fournit les résultats consolidés à Ayoub |
-| 5. Rédiger | `05_rapport_final_ayoub/GUIDE_RAPPORT.md` et `rapport_template.md` | Rapport complet, chiffres vérifiés, limites et conclusion | Ayoub vérifie que les résultats correspondent aux artefacts et décisions des phases précédentes |
+| Phase | Dossier / guide | À la fin, on doit avoir… | Statut | Passage de relais |
+|---|---|---|---|---|
+| 1a. Valider la source | `01_exploration_eda/GUIDE_EDA.md` — Ayoub | Configs, schéma, labels et splits vérifiés | **Terminé** (cf. `source_validation.md`) | Ayoub transmet ses constats à Taoufik |
+| 1b. Auditer les données | `01_exploration_eda/GUIDE_EDA.md` — Taoufik | EDA, contrôle des groupes/fuites et décision de passage | **Terminé** (cf. `eda_report.md` et `data_processed/`) | GO validé pour Phase 2 et Phase 3 |
+| 2. Établir la baseline | `02_baseline_taoufik/GUIDE_BASELINE.md` | Baseline sur `core`, paramètres et prédictions de test exportés | **En cours / À faire** | Taoufik transmet prédictions et identifiants de test |
+| 3. Fine-tuner le transformer | `03_distilbert_ayoub/GUIDE_DISTILBERT.md` | Modèle sur `full`, paramètres et prédictions de test exportés | À faire | Ayoub transmet les prédictions alignables avec la baseline |
+| 4. Comparer | `04_dashboard_comparaison_taoufik/GUIDE_DASHBOARD.md` | Métriques, matrices de confusion et tableau de bord fondés sur des tests comparables | À faire | Taoufik fournit les résultats consolidés à Ayoub |
+| 5. Rédiger | `05_rapport_final_ayoub/GUIDE_RAPPORT.md` et `rapport_template.md` | Rapport complet, chiffres vérifiés, limites et conclusion | À faire | Ayoub vérifie que les résultats correspondent aux artefacts et décisions des phases précédentes |
 
 ## Ce qu'il faut préparer et consigner
 
