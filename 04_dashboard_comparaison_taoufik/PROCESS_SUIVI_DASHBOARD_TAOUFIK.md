@@ -51,8 +51,10 @@ L'interface web est **l'élément central de démonstration du projet**. Elle do
    * Exécution instantanée des détecteurs avec jauge de risque en couleur (Vert = Bénin / Rouge = Alerte Injection ou Jailbreak).
    * Affichage de la probabilité malveillante (`score_malicious`) et recommandation d'action (Autoriser l'envoi au LLM ou Bloquer avec alerte de sécurité).
 
-### Étape 3 : Fiche de Protocole Comparatif
-Remplir le document `04_dashboard_comparaison_taoufik/comparison_protocol.md` décrivant les écarts observés, les forces/faiblesses de chaque méthode (compromis latence vs précision) et transmettre ces chiffres consolidés à Ayoub pour le rapport final.
+### Étape 4 : Reporter toutes les données et captures dans le dossier du Rapport Final (Phase 5)
+À la fin de la Phase 4, reporter les résultats consolidés dans le fichier central :
+`05_rapport_final_ayoub/DONNEES_CONSOLIDEES_POUR_RAPPORT.md` dans la section dédiée à la **Phase 4**.
+Prendre également des captures d'écran soignées de l'application Streamlit (Vue d'ensemble, Métriques comparatives, Analyse des Faux Négatifs, Playground Live) et les déposer dans `05_rapport_final_ayoub/figures/` pour illustrer le rapport final.
 
 ---
 
