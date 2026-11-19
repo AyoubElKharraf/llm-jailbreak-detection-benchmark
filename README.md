@@ -39,7 +39,7 @@ La comparaison porte sur la précision, le rappel, le F1-score et les matrices d
 | 1b. Auditer les données | `01_exploration_eda/GUIDE_EDA.md` — Taoufik | EDA, contrôle des groupes/fuites et décision de passage | **Terminé** (cf. `eda_report.md` et `data_processed/`) | GO validé pour Phase 2 et Phase 3 |
 | 2. Établir la baseline | `02_baseline_taoufik/GUIDE_BASELINE.md` | Baseline sur `core`, paramètres et prédictions de test exportés | **En cours / À faire** | Taoufik transmet prédictions et identifiants de test |
 | 3. Fine-tuner le transformer | `03_distilbert_ayoub/GUIDE_DISTILBERT.md` | Modèle sur `full`, paramètres et prédictions de test exportés | **Terminé** (F1 test: 96,84 %) | Ayoub transmet les prédictions alignables avec la baseline |
-| 4. Comparer | `04_dashboard_comparaison_taoufik/GUIDE_DASHBOARD.md` | Métriques, matrices de confusion et tableau de bord fondés sur des tests comparables | À faire | Taoufik fournit les résultats consolidés à Ayoub |
+| 4. Comparer | `04_dashboard_comparaison_taoufik/GUIDE_DASHBOARD.md` | Métriques, matrices de confusion et tableau de bord fondés sur des tests comparables | **Interface Web prête** (`app.py`), en attente exports baseline | Taoufik fournit les résultats consolidés à Ayoub |
 | 5. Rédiger | `05_rapport_final_ayoub/GUIDE_RAPPORT.md` et `rapport_template.md` | Rapport complet, chiffres vérifiés, limites et conclusion | À faire | Ayoub vérifie que les résultats correspondent aux artefacts et décisions des phases précédentes |
 
 ## Ce qu'il faut préparer et consigner
