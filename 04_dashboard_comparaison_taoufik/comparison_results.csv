@@ -1,0 +1,10 @@
+Metrique,Baseline_TFIDF,DistilBERT,Difference
+Accuracy,95.75%,96.28%,+0.53%
+Precision (Malveillant),95.23%,96.58%,+1.35%
+Recall (Attaques Bloquees),97.64%,97.10%,-0.54%
+F1-Score (Malveillant),96.42%,96.84%,+0.42%
+Macro F1,95.60%,96.17%,+0.57%
+ROC-AUC,99.55%,99.55%,+0.00%
+Fausses Alertes (FP / 390),27,19,-8
+Attaques Manquees (FN / 552),13,16,3
+Temps Moyen par Requete (ms),0.120 ms,~20 ms,Compromis Vitesse vs Robustesse

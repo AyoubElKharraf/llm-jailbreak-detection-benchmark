@@ -41,29 +41,28 @@ Il sert de **source unique de vérité** pour la rédaction finale du rapport pa
 
 ---
 
-## 📁 PHASE 2 : BASELINE TF-IDF + RÉGRESSION LOGISTIQUE (Taoufik)
-*(À compléter par Taoufik à la fin de la Phase 2)*
+## 📁 PHASE 2 : BASELINE TF-IDF + RÉGRESSION LOGISTIQUE (Terminée — Taoufik)
 
 ### 2.1 Outils & Configuration
 - **Bibliothèques :** `scikit-learn`, `pandas`, `numpy`
 - **Données d'entraînement :** `data_processed/core/train.parquet` (4 391 exemples originaux)
-- **Représentation textuelle :** `TfidfVectorizer` (n-grammes, vocabulaire ajusté **uniquement sur le train**)
-- **Modèle :** `LogisticRegression` (optimisation des hyperparamètres `C`, `penalty`, `solver` sur `core/validation.parquet`)
+- **Représentation textuelle :** `TfidfVectorizer` (ngram_range=(1,2), min_df=2, lowercase=True) ajusté **uniquement sur le train**
+- **Modèle :** `LogisticRegression` (C=10.0, class_weight='balanced', solver='liblinear') optimisé sur `core/validation.parquet`
 - **Graine aléatoire :** 42
+- **Temps d'inférence total (test 942 ex.) :** 0,113 s (soit **0,120 ms par requête**)
 
 ### 2.2 Résultats Réels sur le Jeu de Test (942 exemples)
-- **Accuracy :** `[À insérer par Taoufik]`
-- **Precision (Malveillant) :** `[À insérer par Taoufik]`
-- **Recall (Malveillant) :** `[À insérer par Taoufik]`
-- **F1-Score (Malveillant) :** `[À insérer par Taoufik]`
-- **Macro F1 :** `[À insérer par Taoufik]`
-- **ROC-AUC :** `[À insérer par Taoufik]`
+- **Accuracy :** **95,75 %** (0.9575)
+- **Precision (Malveillant) :** **95,23 %** (0.9523)
+- **Recall (Malveillant) :** **97,64 %** (0.9764) — *539 attaques interceptées sur 552*
+- **F1-Score (Malveillant) :** **96,42 %** (0.9642)
+- **Macro F1 :** **95,60 %** (0.9560)
+- **ROC-AUC :** **99,55 %** (0.9955)
 - **Matrice de Confusion :**
-  - Vrais Négatifs (Bénins acceptés) : `[À insérer]`
-  - Faux Positifs (Bénins bloqués) : `[À insérer]`
-  - Faux Négatifs (Attaques manquées) : `[À insérer]`
-  - Vrais Positifs (Attaques détectées) : `[À insérer]`
-- **Temps d'inférence moyen :** `[À insérer]` ms / requête
+  - Vrais Négatifs (Bénins acceptés) : **363** (sur 390 réels)
+  - Faux Positifs (Fausses alertes) : **27** (taux d'erreur : 6,92 %)
+  - Faux Négatifs (Attaques manquées) : **13** (taux d'évasion : 2,36 %)
+  - Vrais Positifs (Attaques détectées) : **539**
 
 ---
 
@@ -102,38 +101,32 @@ Il sert de **source unique de vérité** pour la rédaction finale du rapport pa
 
 ---
 
-## 📁 PHASE 4 : BENCHMARK COMPARATIF & APPLICATION WEB STREAMLIT (Taoufik)
-*(À compléter par Taoufik à la fin de la Phase 4)*
+## 📁 PHASE 4 : BENCHMARK COMPARATIF & APPLICATION WEB STREAMLIT (Terminée — Taoufik & Ayoub)
 
 ### 4.1 Outils & Alignement
 - **Script de comparaison :** `04_dashboard_comparaison_taoufik/compare_models.py`
 - **Méthode d'alignement :** Jointure stricte sur `example_id` (de `test_0000` à `test_0941`)
+- **Taux de concordance des prédictions :** **97,35 %** (917 décisions identiques sur 942)
 - **Fichier de synthèse :** `comparison_results.csv`
-- **Graphique comparatif :** `comparison_summary.png`
+- **Protocole d'analyse :** `comparison_protocol.md`
 
 ### 4.2 Tableau Comparatif Consolidé (Baseline vs DistilBERT)
 
-| Métrique | Baseline (TF-IDF + LR) | DistilBERT (`full`) | Écart / Gain |
-|---|---|---|---|
-| **Accuracy** | `[À insérer]` | **96,28 %** | `[À calculer]` |
-| **Precision (Malveillant)**| `[À insérer]` | **96,58 %** | `[À calculer]` |
-| **Recall (Malveillant)** | `[À insérer]` | **97,10 %** | `[À calculer]` |
-| **F1-Score (Malveillant)** | `[À insérer]` | **96,84 %** | `[À calculer]` |
-| **ROC-AUC** | `[À insérer]` | **99,55 %** | `[À calculer]` |
-| **Latence d'inférence** | `[À insérer]` ms | ~15-30 ms | Compromis Vitesse vs Puissance |
+| Métrique d'Évaluation | Baseline (TF-IDF + LR) | DistilBERT (`full`) | Écart / Gain |
+|---|:---:|:---:|---|
+| **Accuracy** | 95,75 % | **96,28 %** | **+0,53 %** |
+| **Precision (Malveillant)**| 95,23 % | **96,58 %** | **+1,35 %** |
+| **Recall (Malveillant)** | **97,64 %** | 97,10 % | -0,54 % |
+| **F1-Score (Malveillant)** | 96,42 % | **96,84 %** | **+0,42 %** |
+| **Macro F1** | 95,60 % | **96,17 %** | **+0,57 %** |
+| **ROC-AUC** | 99,55 % | 99,55 % | Identique (0.9955) |
+| **Fausses Alertes (FP / 390)** | 27 (6,92 %) | **19 (4,87 %)** | **-8 erreurs (-30 %)** |
+| **Attaques Manquées (FN / 552)** | **13 (2,36 %)** | 16 (2,90 %) | +3 |
+| **Latence moyenne d'inférence** | **0,12 ms** | ~15 - 25 ms | Baseline ~150x plus rapide |
 
 ### 4.3 Interface Web Interactive (Streamlit)
 - **Fichier de l'application :** `04_dashboard_comparaison_taoufik/app.py`
-- **Fonctionnalités intégrées :**
-  1. Vue d'ensemble du projet & Schéma d'architecture de défense.
-  2. Comparaison graphique interactive des métriques & Matrices de confusion côte à côte.
-  3. Analyse forensique des erreurs (Faux Négatifs / Évasions classées par typologie d'attaque).
-  4. Démonstrateur interactif en direct (Playground de test de prompts avec jauge de risque).
-- **Captures d'écran produites pour le rapport :**
-  - `dashboard_overview.png`
-  - `dashboard_metrics_comparison.png`
-  - `dashboard_error_analysis.png`
-  - `dashboard_live_test.png`
+- **État :** 100 % opérationnelle avec 5 pages dynamiques, graphiques interactifs et comparateur en direct.
 
 ---
 
