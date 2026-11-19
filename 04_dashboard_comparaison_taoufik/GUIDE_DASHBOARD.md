@@ -73,10 +73,12 @@ Le tableau de bord doit pouvoir être relancé avec les exports attendus. Ne pas
 
 ## Checklist avant de remettre le travail
 
-- [ ] Les exports ont été contrôlés et joints par identifiant stable.
+- [x] L'application web interactive Streamlit (`app.py`) a été développée et fonctionne avec ses 5 pages.
+- [ ] Les exports ont été contrôlés et joints par identifiant stable via `compare_models.py`.
 - [ ] Les labels réels concordent sur les exemples comparés.
 - [ ] Même classe positive, même convention métrique, supports affichés.
 - [ ] Les différences de corpus/split et exclusions sont visibles.
 - [ ] Les matrices de confusion ont des axes et classes clairement nommés.
+- [ ] Les captures d'écran et métriques consolidées sont déposées dans `05_rapport_final_ayoub/`.
 - [ ] L'analyse présente des erreurs, pas seulement les scores agrégés.
 - [ ] Le tableau de bord et ses instructions ont été transmis à Ayoub.
