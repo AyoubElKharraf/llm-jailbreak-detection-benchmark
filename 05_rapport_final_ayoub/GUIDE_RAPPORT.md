@@ -61,23 +61,24 @@ Préciser que les classifieurs peuvent produire des faux positifs et faux négat
 
 ## Fichiers à produire dans ce dossier
 
-| Fichier | Contenu attendu | À versionner ? |
-|---|---|---|
-| `rapport_final.md` ou `rapport_final.docx` | Rapport complété depuis `rapport_template.md`, avec résultats vérifiés, références et analyse critique. | Oui |
-| `figures/` | Figures finales numérotées, légendées et citées dans le rapport. | Oui |
-| `references.bib` (si BibTeX est utilisé) | Références des sources, modèles et outils ; sinon les inclure dans le rapport. | Oui |
-| `reproduction.md` | Sources, split, versions, paramètres et étapes nécessaires pour reproduire les expériences. | Oui |
-| `annexes/` (si nécessaire) | Tableaux supplémentaires, dictionnaire des données et détails expérimentaux utiles. | Oui, sous réserve des conditions des données |
+| Fichier                                    | Contenu attendu                                                                                         | À versionner ?                               |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| `rapport_final.md` ou `rapport_final.docx` | Rapport complété depuis `rapport_template.md`, avec résultats vérifiés, références et analyse critique. | Oui                                          |
+| `figures/`                                 | Figures finales numérotées, légendées et citées dans le rapport.                                        | Oui                                          |
+| `references.bib` (si BibTeX est utilisé)   | Références des sources, modèles et outils ; sinon les inclure dans le rapport.                          | Oui                                          |
+| `reproduction.md`                          | Sources, split, versions, paramètres et étapes nécessaires pour reproduire les expériences.             | Oui                                          |
+| `annexes/` (si nécessaire)                 | Tableaux supplémentaires, dictionnaire des données et détails expérimentaux utiles.                     | Oui, sous réserve des conditions des données |
 
 Ne pas inclure dans le rapport prompts ou données sources si leur redistribution n'est pas autorisée. Citer les sources et décrire comment les récupérer selon leurs conditions.
 
 ## Checklist finale
 
-- [ ] La tâche et les classes sont définies sans ambiguïté.
-- [ ] Les sources, versions, licences/conditions et transformations sont décrites.
-- [ ] Les effectifs finaux sont après harmonisation/déduplication.
-- [ ] Le split et les contrôles anti-fuite sont expliqués.
-- [ ] Les deux modèles sont comparés sur un périmètre identifié.
+- [x] La tâche et les classes sont définies sans ambiguïté.
+- [x] Les sources, versions, licences/conditions et transformations sont décrites.
+- [x] Les effectifs finaux sont après harmonisation/déduplication.
+- [x] Le split et les contrôles anti-fuite sont expliqués.
+- [x] Les deux modèles sont comparés sur un périmètre identifié.
+- [x] Le rapport complet est rédigé dans `rapport_final.md` avec toutes les figures et analyses.
 - [ ] Chaque chiffre est vérifiable dans un artefact de résultat.
 - [ ] Les faux négatifs, faux positifs, limites du dataset et limites de généralisation sont abordés.
 - [ ] Le rapport affirme qu'un classifieur ne garantit pas une sécurité absolue en production.

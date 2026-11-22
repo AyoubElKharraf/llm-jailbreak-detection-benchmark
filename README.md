@@ -40,7 +40,7 @@ La comparaison porte sur la précision, le rappel, le F1-score et les matrices d
 | 2. Établir la baseline | `02_baseline_taoufik/GUIDE_BASELINE.md` | Baseline sur `core`, paramètres et prédictions de test exportés | **Terminé** (F1 test: 96,42 %) | Taoufik transmet prédictions et identifiants de test |
 | 3. Fine-tuner le transformer | `03_distilbert_ayoub/GUIDE_DISTILBERT.md` | Modèle sur `full`, paramètres et prédictions de test exportés | **Terminé** (F1 test: 96,84 %) | Ayoub transmet les prédictions alignables avec la baseline |
 | 4. Comparer | `04_dashboard_comparaison_taoufik/GUIDE_DASHBOARD.md` | Métriques, matrices de confusion et tableau de bord fondés sur des tests comparables | **Terminé** (Interface Web + Consolidation) | Prêt pour rédaction du rapport |
-| 5. Rédiger | `05_rapport_final_ayoub/GUIDE_RAPPORT.md` et `rapport_template.md` | Rapport complet, chiffres vérifiés, limites et conclusion | **En cours** (Données consolidées prêtes) | Ayoub finalise le rapport |
+| 5. Rédiger | `05_rapport_final_ayoub/GUIDE_RAPPORT.md` et `rapport_final.md` | Rapport complet, chiffres vérifiés, limites et conclusion | **Terminé** (Rapport finalisé dans `rapport_final.md`) | Projet 100 % finalisé et prêt pour soutenance |
 
 ## Ce qu'il faut préparer et consigner
 
